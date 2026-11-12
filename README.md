@@ -2,6 +2,11 @@
 
 **Control the RGB of ASUS mainboards and ASUS GeForce cards from Corsair iCUE, without Armoury Crate.**
 
+<p align="center">
+  <img src="docs/icue-tiles.gif" alt="ASUS GPU and ROG STRIX mainboard as tiles in iCUE" width="320"><br>
+  <em>ASUS graphics card and mainboard as regular devices in iCUE, with no ASUS software installed.</em>
+</p>
+
 iCUE 4 already ships an ASUS plugin, but it only works when ASUS' Aura software
 (Armoury Crate / LightingService) is installed. IcueAuraBridge replaces that one missing
 piece: a small DLL that implements the ASUS Aura SDK interface iCUE's plugin talks to, and
@@ -12,8 +17,6 @@ no background service, and no ASUS software.
 > Reports from other boards and cards are very welcome: please open an issue with your `bridge.log`.
 >
 > Not affiliated with, endorsed by, or supported by Corsair or ASUS. Use at your own risk.
-
-<img src="docs/icue-tiles.gif" alt="ASUS GPU and ROG STRIX mainboard tiles in iCUE" align="right" width="185">
 
 ![ASUS mainboard and graphics card next to Corsair devices in iCUE](docs/icue-devices.png)
 
