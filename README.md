@@ -18,6 +18,12 @@ no background service, and no ASUS software.
 *Mainboard and graphics card as regular devices in iCUE, next to Corsair hardware. The tile
 pictures are the generic ones that ship with iCUE's ASUS plugin (see limitations).*
 
+| Mainboard: onboard LEDs and both 12 V RGB headers | Graphics card: 4 LEDs |
+|---|---|
+| ![ROG STRIX B550-F GAMING in iCUE](docs/icue-mainboard.png) | ![ASUS TUF RTX 3070 Ti in iCUE](docs/icue-gpu.png) |
+
+*Every LED can be used with iCUE's lighting layers, including links, temperature and Murals.*
+
 ## Background
 
 If you run Corsair iCUE and have an ASUS mainboard or ASUS graphics card, the usual answers
