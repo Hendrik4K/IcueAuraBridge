@@ -13,6 +13,8 @@ no background service, and no ASUS software.
 >
 > Not affiliated with, endorsed by, or supported by Corsair or ASUS. Use at your own risk.
 
+<img src="docs/icue-tiles.gif" alt="ASUS GPU and ROG STRIX mainboard tiles in iCUE" align="right" width="185">
+
 ![ASUS mainboard and graphics card next to Corsair devices in iCUE](docs/icue-devices.png)
 
 *Mainboard and graphics card as regular devices in iCUE, next to Corsair hardware. The tile
