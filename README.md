@@ -20,11 +20,9 @@ no background service, and no ASUS software.
 *Mainboard and graphics card as regular devices in iCUE, next to Corsair hardware. The tile
 pictures are the generic ones that ship with iCUE's ASUS plugin (see limitations).*
 
-| Mainboard: onboard LEDs and both 12 V RGB headers | Graphics card: 4 LEDs |
-|---|---|
-| ![ROG STRIX B550-F GAMING in iCUE](docs/icue-mainboard.png) | ![ASUS TUF RTX 3070 Ti in iCUE](docs/icue-gpu.png) |
-
-*Every LED can be used with iCUE's lighting layers, including links, temperature and Murals.*
+**Quick start:** check your hardware, uninstall Armoury Crate, download the
+[latest release](https://github.com/Hendrik4K/IcueAuraBridge/releases/latest), run
+`install.ps1`. Details in the [step-by-step guide](#step-by-step-guide).
 
 ## Background
 
@@ -51,23 +49,95 @@ Other requirements:
 
 AMD graphics cards, DRAM lighting and ASUS peripherals are not supported.
 
-## Install
+## Step-by-step guide
 
-1. Download the latest release zip and extract it.
-2. Right-click `install.ps1` → **Run with PowerShell**, or from a terminal:
-   ```powershell
-   powershell -ExecutionPolicy Bypass -File .\install.ps1
-   ```
-3. Confirm the admin prompt. The script restarts iCUE; the mainboard and the graphics card
-   then show up as devices in iCUE.
+### 1. Check your hardware
 
-Uninstall:
+Open PowerShell and run:
+
+```powershell
+Get-PnpDevice -PresentOnly | Where-Object InstanceId -match 'VID_0B05' | Select-Object FriendlyName, InstanceId
+Get-CimInstance Win32_VideoController | Select-Object Name, PNPDeviceID
+```
+
+- **Mainboard:** the first command should list an **AURA LED Controller** whose ID contains
+  `PID_18F3`, `PID_1939`, `PID_19AF`, `PID_1AA6` or `PID_1BED`.
+- **Graphics card:** in the second command's output, `PNPDeviceID` looks like
+  `PCI\VEN_10DE&DEV_2482&SUBSYS_88121043…`. `DEV_2482` is the card, and `SUBSYS_8812` + `1043`
+  is the ASUS model. Look up the pair (`0x2482…8812`) in [`src/GpuList.cs`](src/GpuList.cs).
+
+If only one of the two matches, that's fine: the bridge uses whatever it finds.
+
+### 2. Remove Armoury Crate
+
+Armoury Crate and ASUS LightingService register the same interface as this bridge, so they
+can't be installed at the same time. Uninstall Armoury Crate with ASUS' *Armoury Crate
+Uninstall Tool* (from ASUS' support site) and reboot. The installer refuses to continue while
+Armoury Crate's interface is still registered.
+
+### 3. Download
+
+Download `IcueAuraBridge-<version>.zip` from the
+[latest release](https://github.com/Hendrik4K/IcueAuraBridge/releases/latest) and **extract
+it** to a folder. Don't run the script from inside the zip.
+
+### 4. Install
+
+Right-click `install.ps1` → **Run with PowerShell**, or from a terminal in that folder:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\install.ps1
+```
+
+Confirm the admin prompt (Windows may also ask once whether to run a downloaded script). A
+second window runs briefly, then you should see:
+
+```
+IcueAuraBridge: stopping iCUE and its plugin host
+IcueAuraBridge: installed 1.0.0.0 to C:\Program Files\IcueAuraBridge\IcueAuraBridge.dll
+IcueAuraBridge: log and settings in C:\ProgramData\IcueAuraBridge
+IcueAuraBridge: starting iCUE again
+```
+
+### 5. Find the devices in iCUE
+
+iCUE restarts by itself. After a few seconds the home screen shows new tiles: the mainboard
+under its model name and the graphics card as **ASUS GPU: …** (see the screenshot at the top).
+
+### 6. Set up the lighting
+
+Click a tile → **Lighting Effects**. Every LED appears on its own and works with all of iCUE's
+lighting layers: effects, lighting links to sync with your Corsair devices, temperature
+colours, Murals.
+
+| Mainboard: 3 onboard LEDs and both 12 V RGB headers | Graphics card: 4 LEDs |
+|---|---|
+| ![ROG STRIX B550-F GAMING in iCUE](docs/icue-mainboard.png) | ![ASUS TUF RTX 3070 Ti in iCUE](docs/icue-gpu.png) |
+
+### 7. Optional: ARGB headers
+
+LEDs on the mainboard's ARGB (5 V, 3-pin) headers can't be counted by the hardware, so they
+are hidden until you tell the bridge how many there are. Open
+`C:\ProgramData\IcueAuraBridge\config.ini` as admin, set e.g. `argb_header_1_leds = 30`
+and restart iCUE. The header then shows up as its own LED strip device. This part is
+**untested** so far (the author's header is empty), so feedback is especially welcome. See
+[Settings](#settings) for all options.
+
+### If something doesn't show up
+
+Open `C:\ProgramData\IcueAuraBridge\bridge.log` and see [Troubleshooting](#troubleshooting).
+When you open an issue, attach that file.
+
+### Uninstall
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\install.ps1 -Uninstall
 ```
 
-What the installer touches:
+This removes the DLL and the registration and restarts iCUE. `C:\ProgramData\IcueAuraBridge`
+(settings and log) is left for you to delete.
+
+### What the installer touches
 
 - `C:\Program Files\IcueAuraBridge\IcueAuraBridge.dll`
 - COM registration `aura.sdk.1` / CLSID `{05921124-5057-483E-A037-E9497B523590}` in `HKLM\SOFTWARE\Classes`
@@ -165,10 +235,23 @@ steuern, ohne Armoury Crate. iCUE bringt schon ein ASUS-Plugin mit, das aber die
 voraussetzt. Diese DLL ersetzt genau diese fehlende Schnittstelle und steuert die Hardware
 direkt über USB bzw. den NVIDIA-Treiber.
 
-Installation: Release-Zip entpacken, `install.ps1` per Rechtsklick → „Mit PowerShell ausführen“,
-Admin-Abfrage bestätigen. iCUE startet neu und zeigt Mainboard und Grafikkarte an.
-Deinstallation mit `install.ps1 -Uninstall`. Einstellungen und Log liegen in
-`C:\ProgramData\IcueAuraBridge\`. Armoury Crate darf nicht installiert sein.
+**Schritt für Schritt:**
+
+1. **Hardware prüfen:** Im Geräte-Manager muss ein „AURA LED Controller“ auftauchen (Mainboard)
+   und/oder die Grafikkarte in [`src/GpuList.cs`](src/GpuList.cs) stehen (Befehle siehe
+   [Schritt 1](#1-check-your-hardware) oben).
+2. **Armoury Crate deinstallieren** (mit dem „Armoury Crate Uninstall Tool“ von ASUS), neu starten.
+3. **Zip herunterladen** vom [neuesten Release](https://github.com/Hendrik4K/IcueAuraBridge/releases/latest)
+   und entpacken.
+4. **`install.ps1`** per Rechtsklick → „Mit PowerShell ausführen“, Admin-Abfrage bestätigen.
+5. **iCUE startet neu** und zeigt Mainboard und Grafikkarte als eigene Kacheln.
+6. **Kachel anklicken → Beleuchtungseffekte:** Jede LED lässt sich einzeln mit allen
+   iCUE-Ebenen steuern (Effekte, Beleuchtungsverknüpfung, Temperatur, Murals).
+7. **ARGB-Header (optional):** Anzahl der LEDs in `C:\ProgramData\IcueAuraBridge\config.ini`
+   eintragen (`argb_header_1_leds = 30`), iCUE neu starten. Noch ungetestet.
+
+Deinstallation mit `install.ps1 -Uninstall`. Probleme? `C:\ProgramData\IcueAuraBridge\bridge.log`
+ansehen oder als Issue anhängen.
 
 Beta: bisher getestet mit ROG STRIX B550-F GAMING + ASUS TUF RTX 3070 Ti. Rückmeldungen zu
 anderen Boards und Karten gern als Issue mit angehängter `bridge.log`.
