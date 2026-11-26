@@ -4,7 +4,7 @@
 
 <p align="center"><img src="https://img.shields.io/badge/Windows-10%20%7C%2011-0078D6" alt="Windows 10 | 11"> <a href="https://github.com/Hendrik4K/IcueAuraBridge/releases/latest"><img src="https://img.shields.io/github/v/release/Hendrik4K/IcueAuraBridge?include_prereleases&label=Version&color=8a2be2" alt="Version"></a> <img src="https://img.shields.io/badge/iCUE-4-ffcc00" alt="iCUE 4"> <img src="https://img.shields.io/badge/Armoury%20Crate-not%20needed-555" alt="Armoury Crate not needed"> <a href="LICENSE"><img src="https://img.shields.io/badge/License-GPL--2.0-blue" alt="License GPL-2.0"></a></p>
 
-<p align="center"><img src="docs/icue-tiles.gif" height="320" alt="ASUS graphics card and ROG STRIX mainboard as tiles in iCUE"> <img src="docs/icue-devices.png" height="320" alt="ASUS mainboard and graphics card next to Corsair devices in iCUE"></p>
+<p align="center"><img src="docs/icue-overview.gif" width="820" alt="iCUE home screen: ASUS graphics card and ROG STRIX mainboard as animated tiles next to Corsair devices"></p>
 
 iCUE already ships an ASUS plugin, but it expects Armoury Crate running in the background. IcueAuraBridge is that one missing piece: a small DLL that presents itself to iCUE as the ASUS Aura SDK and drives the hardware directly over USB and the NVIDIA driver. No extra app, no tray icon, no background service and no ASUS software. Mainboard and graphics card show up as regular tiles in iCUE and sync with your Corsair devices.
 
